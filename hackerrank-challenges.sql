@@ -43,3 +43,16 @@ SELECT ROUND(
         POWER(MAX(LAT_N)-MIN(LAT_N),2) + POWER(MAX(LONG_W)-MIN(LONG_W),2) ), 4
         )
 FROM STATION;
+
+
+# Weather Observation Station 20 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-20/problem
+SET @rowindex:=-1;
+SELECT
+   ROUND(AVG(l.LAT_N),4) as Median
+FROM
+   (SELECT @rowindex:=@rowindex+1 AS rowindex,
+           STATION.LAT_N
+    FROM STATION
+    ORDER BY LAT_N) as l
+WHERE
+l.rowindex IN (FLOOR(@rowindex / 2), CEIL(@rowindex / 2));
