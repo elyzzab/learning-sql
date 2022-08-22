@@ -1,6 +1,6 @@
 /*
  "Teava Boba Shop" Demo Database for Github SQL Portfolio
- Created by Elyzza Bobadilla
+ Created by Elyzza Bobadilla in MySQL
  **table creation queries not in order**
 */
 
