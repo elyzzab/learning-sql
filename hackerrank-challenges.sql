@@ -1,7 +1,7 @@
-# This file holds notable challenges from Hackerrank that really stretched my knowledge of SQL.
+/* This file holds notable challenges from Hackerrank that really stretched my knowledge of SQL. */
 
 
-# The PADS [Medium]: https://www.hackerrank.com/challenges/the-pads/problem
+-- The PADS [Medium]: https://www.hackerrank.com/challenges/the-pads/problem
 SELECT CONCAT(Name, "(", LEFT(Occupation, 1), ")")
 FROM OCCUPATIONS
 ORDER BY Name ASC;
@@ -12,7 +12,7 @@ GROUP BY Occupation
 ORDER BY COUNT(Occupation) ASC, Occupation ASC;
 
 
-# Occupations [Medium]: https://www.hackerrank.com/challenges/occupations/problem
+-- Occupations [Medium]: https://www.hackerrank.com/challenges/occupations/problem
 SET @d=0,@a=0,@p=0,@s=0;
 SELECT MIN(Doctor),MIN(Professor),MIN(SINGER),MIN(Actor)
 FROM
@@ -32,12 +32,12 @@ FROM
 GROUP BY TMP.idn ;
 
 
-# Weather Observation Station 18 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-18/problem
+-- Weather Observation Station 18 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-18/problem
 SELECT ROUND( (MAX(LAT_N)-MIN(LAT_N)) + (MAX(LONG_W)-MIN(LONG_W) ),4)
 FROM STATION;
 
 
-# Weather Observation Station 19 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-19/problem
+-- Weather Observation Station 19 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-19/problem
 SELECT ROUND(
     SQRT(
         POWER(MAX(LAT_N)-MIN(LAT_N),2) + POWER(MAX(LONG_W)-MIN(LONG_W),2) ), 4
@@ -45,7 +45,7 @@ SELECT ROUND(
 FROM STATION;
 
 
-# Weather Observation Station 20 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-20/problem
+-- Weather Observation Station 20 [Medium]: https://www.hackerrank.com/challenges/weather-observation-station-20/problem
 SET @rowindex:=-1;
 SELECT
    ROUND(AVG(l.LAT_N),4) as Median
