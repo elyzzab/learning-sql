@@ -30,7 +30,7 @@ WHERE drink_title LIKE '%tea';
 -- check which drinks are the most expensive and what to try if drink is non-dairy
 SELECT drink_title, addon, price,
 CASE
-    WHEN dairy = 'no' OR dairy = 'varies' THEN 'try this'
+	WHEN dairy = 'no' OR dairy = 'varies' THEN 'try this'
 	ELSE 'no thanks'
 	END AS 'drinks to try'
 FROM bobashopmenu
@@ -71,9 +71,9 @@ JOIN shoplocations l ON l.location_id = cc.location_id;
 SELECT
 	o.order_item_id AS 'Order#',
 	o.order_date AS 'Order Date',
-    a.shop_title AS 'Shop Location',
-    concat(a.first_name, " ", LEFT(a.last_name,1), ".") AS 'Customer Name',
-    b.drink_title 'Drink'
+	a.shop_title AS 'Shop Location',
+	concat(a.first_name, " ", LEFT(a.last_name,1), ".") AS 'Customer Name',
+	b.drink_title 'Drink'
 FROM AllCustomers a
 JOIN orders o ON a.customer_id = o.customer_id AND a.location_id = o.location_id
 JOIN bobashopmenu b ON b.product_id = o.product_id
