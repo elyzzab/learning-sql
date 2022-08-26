@@ -15,18 +15,23 @@ GROUP BY s.customer_id;
 -- 2. How many days has each customer visited the restaurant?
 SELECT
 	customer_id AS Customer,
-    COUNT(DISTINCT order_date) AS 'Number of Visits'
+	COUNT(DISTINCT order_date) AS 'Number of Visits'
 FROM sales
 GROUP BY customer_id;
 
 -- 3. What was the first item from the menu purchased by each customer?
-SELECT s.customer_id, MIN(s.order_date), m.product_name
+SELECT
+	s.customer_id,
+	MIN(s.order_date),
+	m.product_name
 FROM sales s
 JOIN menu m ON m.product_id = s.product_id
 GROUP BY customer_id;
 
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
-SELECT m.product_name AS 'Menu Item', COUNT(s.product_id) AS 'Times Purchased'
+SELECT
+	m.product_name AS 'Menu Item',
+	COUNT(s.product_id) AS 'Times Purchased'
 FROM sales s
 JOIN menu m ON m.product_id = s.product_id
 GROUP BY m.product_id
@@ -35,7 +40,10 @@ LIMIT 1;
 
 -- 5. Which item was the most popular for each customer?
 # using a derived table
-SELECT customer_id, product_name, Freq_Ordered
+SELECT
+	customer_id,
+	product_name,
+	Freq_Ordered
 FROM (
 	SELECT
 		s.customer_id,
@@ -53,16 +61,19 @@ WHERE order_rank = 1;
 
 -- 6. Which item was purchased first by the customer after they became a member?
 # using a derived table
-SELECT customer_id, order_date, m.product_name
+SELECT
+	customer_id,
+	order_date,
+	m.product_name
 FROM (
 SELECT
 	s.customer_id,
-    s.order_date,
-    s.product_id,
-    DENSE_RANK() OVER(
-    PARTITION BY s.customer_id
-    ORDER BY s.order_date
-        ) order_rank
+	s.order_date,
+	s.product_id,
+	DENSE_RANK() OVER(
+		PARTITION BY s.customer_id
+		ORDER BY s.order_date
+		) order_rank
 FROM sales s
 INNER JOIN members mem ON mem.customer_id = s.customer_id
 WHERE s.order_date > mem.join_date
@@ -98,14 +109,17 @@ WITH date_rank AS (
 	SELECT s.customer_id, mem.join_date, s.order_date, s.product_id, m.price,
 		DENSE_RANK() OVER (
 			PARTITION BY s.customer_id
-			ORDER BY s.order_date) AS order_rank
+			ORDER BY s.order_date
+			) AS order_rank
 	FROM sales s
     INNER JOIN members mem ON mem.customer_id = s.customer_id
     JOIN menu m ON m.product_id = s.product_id
     WHERE s.order_date < mem.join_date
     ORDER BY s.customer_id
 )
-SELECT dr.customer_id, SUM(dr.price) AS Before_Member_Total
+SELECT
+	dr.customer_id,
+	SUM(dr.price) AS Before_Member_Total
 FROM date_rank dr
 GROUP BY dr.customer_id;
 
@@ -120,7 +134,9 @@ SELECT s.customer_id, s.product_id, m.product_name, m.price,
 FROM sales s
 JOIN menu m ON m.product_id = s.product_id
 )
-SELECT pt.customer_id, SUM(pt.points) AS Total_Points
+SELECT
+	pt.customer_id,
+	SUM(pt.points) AS Total_Points
 FROM pt
 GROUP BY pt.customer_id;
 
@@ -134,16 +150,18 @@ WITH point_ct AS (
 SELECT
 	s.customer_id,
 	mem.join_date,
-    s.order_date,
-    DATE_ADD(mem.join_date, INTERVAL 6 DAY) AS lastDay,
-    s.product_id, m.price,
+	s.order_date,
+	DATE_ADD(mem.join_date, INTERVAL 6 DAY) AS lastDay,
+	s.product_id,
+	m.price,
 	CASE
 		WHEN s.order_date BETWEEN mem.join_date AND DATE_ADD(mem.join_date, INTERVAL 6 DAY) THEN m.price*20
 		WHEN s.order_date NOT BETWEEN mem.join_date AND DATE_ADD(mem.join_date, INTERVAL 6 DAY) THEN (
-			CASE WHEN s.product_id = '1' THEN m.price*20
-            ELSE m.price*10
-            END)
-		END AS points
+			CASE
+				WHEN s.product_id = '1' THEN m.price*20
+            			ELSE m.price*10
+            		END)
+	END AS points
 FROM sales s
 INNER JOIN members mem ON mem.customer_id = s.customer_id
 JOIN menu m ON m.product_id = s.product_id
