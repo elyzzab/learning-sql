@@ -11,6 +11,6 @@
 
 ### ... or been stumped by (and thus learned from).
 
-| Project/Exercise | Crief Description | File |
+| Project/Exercise | Brief Description | File |
 | ----------- | ----------- | ----------- |
 | Hackerrank | Notable Challenges | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/hackerrank-challenges.sql) |
