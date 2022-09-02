@@ -62,10 +62,10 @@ SELECT location_id, first_name, last_name FROM customer2;
 CREATE TEMPORARY TABLE AllCustomers
 AS
 SELECT l.shop_title, c.location_id, c.customer_id, c.first_name, c.last_name FROM customer c
-JOIN shoplocations l ON l.location_id = c.location_id
+JOIN shoplocations l ON c.location_id = l.location_id
 UNION
 SELECT l.shop_title, cc.location_id, cc.customer_id, cc.first_name, cc.last_name FROM customer2 cc
-JOIN shoplocations l ON l.location_id = cc.location_id;
+JOIN shoplocations l ON cc.location_id = l.location_id;
 
 -- query order #, order date, shop title, customer first name and last name initial, and drink names with temporary table and joins
 SELECT
