@@ -33,7 +33,7 @@ SELECT
 	m.product_name AS 'Menu Item',
 	COUNT(s.product_id) AS 'Times Purchased'
 FROM sales s
-JOIN menu m ON m.product_id = s.product_id
+JOIN menu m ON s.product_id = m.product_id
 GROUP BY m.product_id
 ORDER BY COUNT(s.product_id) DESC
 LIMIT 1;
@@ -78,7 +78,7 @@ FROM sales s
 INNER JOIN members mem ON mem.customer_id = s.customer_id
 WHERE s.order_date > mem.join_date
 ) ranked
-JOIN menu m ON m.product_id = ranked.product_id
+JOIN menu m ON ranked.product_id = m.product_id
 WHERE order_rank = 1
 ORDER BY ranked.customer_id;
 
@@ -95,12 +95,12 @@ WITH ranked AS (
 			ORDER BY s.order_date DESC
 			) AS order_rank
 	FROM sales s
-	INNER JOIN members mem ON mem.customer_id = s.customer_id
+	INNER JOIN members mem ON s.customer_id = mem.customer_id
 	WHERE s.order_date < mem.join_date
 )
 SELECT r.customer_id, r.order_date, m.product_name, r.order_rank
 FROM ranked r
-JOIN menu m ON m.product_id = r.product_id
+JOIN menu m ON r.product_id = m.product_id
 WHERE order_rank = 1
 ORDER BY r.customer_id;
 
@@ -113,7 +113,7 @@ WITH date_rank AS (
 			) AS order_rank
 	FROM sales s
     INNER JOIN members mem ON mem.customer_id = s.customer_id
-    JOIN menu m ON m.product_id = s.product_id
+    JOIN menu m ON s.product_id = m.product_id
     WHERE s.order_date < mem.join_date
     ORDER BY s.customer_id
 )
@@ -132,7 +132,7 @@ SELECT s.customer_id, s.product_id, m.product_name, m.price,
 		WHEN '3' THEN '120'
 	END AS points
 FROM sales s
-JOIN menu m ON m.product_id = s.product_id
+JOIN menu m ON s.product_id = m.product_id
 )
 SELECT
 	pt.customer_id,
@@ -164,7 +164,7 @@ SELECT
 	END AS points
 FROM sales s
 INNER JOIN members mem ON mem.customer_id = s.customer_id
-JOIN menu m ON m.product_id = s.product_id
+JOIN menu m ON s.product_id = m.product_id
 ORDER BY s.customer_id, s.order_date)
 
 SELECT pt.customer_id, SUM(pt.points)
@@ -190,6 +190,6 @@ SELECT s.customer_id, s.order_date, m.product_name, m.price,
 		ELSE 'N'
 	END AS 'member'
 FROM sales s
-LEFT JOIN members mem ON mem.customer_id = s.customer_id # left join so it doesn't exclude any customers
+LEFT JOIN members mem ON s.customer_id = mem.customer_id # left join so it doesn't exclude any customers
 JOIN menu m ON m.product_id = s.product_id
 ORDER BY s.customer_id, s.order_date, m.price DESC;
