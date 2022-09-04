@@ -5,10 +5,11 @@ SQL Portfolio
 
 | Project/Exercise | Perceived Difficulty | Brief Description | File |
 | ----------- | ----------- |----------- | ----------- |
-| Pizza Runner Database (DB) | Moderate | create tables for database (db) | in progress |
-| Pizza Runner DB | Moderate | query db to answer Section A case study questions | in progress |
-| Danny's Diner DB | Moderate | create tables for database | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/dannys-diner-table-queries.sql) |
-| Danny's Diner DB | Moderate | query db to answer case study questions | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/dannys-diner-analysis-queries.sql) |
+| Pizza Runner Database (DB) | Easy | create tables for database (db) | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/pizza-runner-table-queries.sql) |
+| Pizza Runner DB | Moderate | create clean temp tables for easier analysis | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/pizza-runner-table-cleaning-queries.sql) |
+| Pizza Runner DB | Moderate | query db to answer case study questions | in progress |
+| Danny's Diner DB | Easy | create tables for database | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/dannys-diner-table-queries.sql) |
+| Danny's Diner DB | Moderate | query db to answer case study questions | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/dannys-diner-analysis-queries.sql) |
 | Boba Shop Demo DB | Easy | create tables for db | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/demo-database-boba-shop-tables.sql) |
 | Boba Shop Demo DB | Easy | explore db by querying | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/demo-database-boba-shop-queries.sql) |
 | SQL Murder Mystery Exercise | Easy | query db to investigate witness testimonies and find murder suspects | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/SLQ-murder-mystery-queries.sql) |
