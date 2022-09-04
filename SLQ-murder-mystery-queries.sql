@@ -1,6 +1,6 @@
 /*
 SQL Murder Mystery queries (done in SQLite)
-Created by Elyzza Bobadilla for SQL Portfolio
+Created by Elyzza Bobadilla for Github SQL Portfolio
 Originally by Joon Park and Cathe He
 SPOILERS BELOW! Try it yourself first at https://mystery.knightlab.com/
 */
