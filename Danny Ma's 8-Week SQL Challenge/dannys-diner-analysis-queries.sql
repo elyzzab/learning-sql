@@ -1,5 +1,5 @@
 /*
- "Danny's Diner" Case Study Queries
+ "Danny's Diner" Case Study Queries for Github SQL Portfolio
  Created by Elyzza Bobadilla in MySQL
  Original by Danny Ma: https://8weeksqlchallenge.com/case-study-1/
 */
