@@ -9,7 +9,7 @@
 SELECT * FROM pizza_runner.runner_orders;
 
 -- create a temporary table to hold the cleaned data so as not to alter original table
-DROP TABLE IF EXISTS cleaned_runner_orders;
+DROP TABLE IF EXISTS clean_runner_orders;
 CREATE TEMPORARY TABLE clean_runner_orders(
 	SELECT
 		order_id,
@@ -19,10 +19,10 @@ CREATE TEMPORARY TABLE clean_runner_orders(
 			ELSE pickup_time
 			END AS pickup_time,
 		CASE
-			WHEN distance_km LIKE '%km' THEN SUBSTRING(distance_km, 1, length(distance_km)-2)
-			WHEN distance_km LIKE '% km' THEN SUBSTRING(distance_km, 1, length(distance_km)-3)
-			WHEN distance_km = "null" THEN NULL
-			ELSE distance_km
+			WHEN distance LIKE '%km' THEN SUBSTRING(distance, 1, length(distance)-2)
+			WHEN distance LIKE '% km' THEN SUBSTRING(distance, 1, length(distance)-3)
+			WHEN distance = "null" THEN NULL
+			ELSE distance
 			END AS distance_km,
 		CASE
 			WHEN duration LIKE '% minutes' THEN SUBSTRING(duration, 1, length(duration)-8)
@@ -50,18 +50,19 @@ SELECT * FROM clean_runner_orders;
 SELECT * FROM pizza_runner.customer_orders;
 
 -- create a temporary table to hold cleaned data
+DROP TABLE IF EXISTS clean_customer_orders;
 CREATE TEMPORARY TABLE clean_customer_orders(
 SELECT order_id, customer_id, pizza_id,
 	CASE
 		WHEN exclusions = "" THEN "0"
-        WHEN exclusions = "null" THEN "0"
-        ELSE exclusions
+        	WHEN exclusions = "null" THEN "0"
+        	ELSE exclusions
         END AS exclusions,
 	CASE
 		WHEN extras = "" THEN "0"
-        WHEN extras = "null" THEN "0"
-        WHEN extras IS NULL THEN "0"
-        ELSE extras
+        	WHEN extras = "null" THEN "0"
+        	WHEN extras IS NULL THEN "0"
+        	ELSE extras
         END as extras,
     order_time
 FROM customer_orders);
