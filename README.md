@@ -20,4 +20,5 @@ SQL Portfolio
 
 | Project/Exercise | Brief Description | File |
 | ----------- | ----------- | ----------- |
-| Hackerrank | notable challenges from the site | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/hackerrank-challenges.sql) |
+| DataLemur | notable challenges from the site | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/datalemur-challenges.sql) |
+| HackerRank | notable challenges from the site | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/hackerrank-challenges.sql) |
