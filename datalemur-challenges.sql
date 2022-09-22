@@ -2,7 +2,7 @@
 
 -- "Data Science Skills"
 /* I was to select candidates that had all 3 required skills. Originally I tried using a CASE statement,
-but the code hinted at a much cleaner solution. */
+but the given hints alluded to a much cleaner solution. */
 SELECT candidate_id
 FROM candidates
 WHERE skill IN ('Python','Tableau','PostgreSQL')
