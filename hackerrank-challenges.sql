@@ -1,4 +1,4 @@
-/* This file holds notable challenges from Hackerrank that really stretched my knowledge of SQL. */
+/* This file holds notable challenges from HackerRank that really stretched my knowledge of SQL. */
 
 
 -- The PADS [Medium]: https://www.hackerrank.com/challenges/the-pads/problem
