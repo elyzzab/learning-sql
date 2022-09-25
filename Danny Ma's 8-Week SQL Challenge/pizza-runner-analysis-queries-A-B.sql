@@ -26,7 +26,9 @@ WHERE cancellation IS NULL
 GROUP BY runner_id;
 
 -- 4. How many of each type of pizza was delivered?
-SELECT o.pizza_id, p.pizza_name, COUNT(p.pizza_id) AS "Number Delivered"
+SELECT
+	o.pizza_id, p.pizza_name,
+	COUNT(p.pizza_id) AS "Number Delivered"
 FROM clean_customer_orders o
 JOIN pizza_names p ON o.pizza_id = p.pizza_id
 JOIN clean_runner_orders r ON r.order_id = o.order_id
@@ -52,18 +54,18 @@ LIMIT 1;
 -- return: partition by customer, filter delivered pizzas only, (extras or exclusions) > 0, (extras or exclusions) = 0
 WITH successful_orders AS (
 	SELECT r.order_id, r.cancellation, o.customer_id, o.pizza_id, o.exclusions, o.extras
-    FROM clean_runner_orders r
-    JOIN clean_customer_orders o ON r.order_id = o.order_id
-    WHERE r.cancellation IS NULL
+	FROM clean_runner_orders r
+	JOIN clean_customer_orders o ON r.order_id = o.order_id
+	WHERE r.cancellation IS NULL
 )
 SELECT s.customer_id,
 	SUM(CASE
 		WHEN (s.extras NOT LIKE "0") OR (s.exclusions NOT LIKE "0") THEN 1
-        ELSE 0
+        	ELSE 0
         END) AS Count_ModPizza,
 	SUM(CASE
 		WHEN (s.extras = "0" AND s.exclusions = "0") THEN 1
-        ELSE 0
+        	ELSE 0
         END) AS Count_PlainPizza
 FROM successful_orders s
 GROUP BY s.customer_id;
@@ -71,14 +73,14 @@ GROUP BY s.customer_id;
 -- 8. How many pizzas were delivered that had both exclusions and extras?
 WITH successful_orders AS (
 	SELECT r.order_id, r.cancellation, o.customer_id, o.pizza_id, o.exclusions, o.extras
-    FROM clean_runner_orders r
-    JOIN clean_customer_orders o ON r.order_id = o.order_id
-    WHERE r.cancellation IS NULL
+	FROM clean_runner_orders r
+	JOIN clean_customer_orders o ON r.order_id = o.order_id
+	WHERE r.cancellation IS NULL
 )
 SELECT
 	SUM(CASE
-		WHEN (s.extras NOT LIKE "0" AND s.exclusions NOT LIKE "0") THEN 1
-        ELSE 0
+	    WHEN (s.extras NOT LIKE "0" AND s.exclusions NOT LIKE "0") THEN 1
+	    ELSE 0
         END) AS Count_veryModPizza
 FROM successful_orders s;
 
@@ -100,7 +102,7 @@ SELECT
 FROM PizzaHour
 GROUP BY DayDate, OrderHour;
 
--- B. ignore date
+-- B. ignoring date
 WITH PizzaHour AS (
 	SELECT
 		order_id,
@@ -135,7 +137,7 @@ SELECT
 FROM PizzaDay
 GROUP BY DayDate, OrderWeekday;
 
--- B. ignore date
+-- B. ignoring date
 WITH PizzaDay AS (
 	SELECT
 		order_id,
@@ -158,57 +160,87 @@ GROUP BY OrderWeekday;
    ------------------------------------------- */
 
 -- 1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
+-- assumption: registration = signing up
 WITH runners_weekly AS (
-	SELECT order_id, runner_id, DATE(CAST(pickup_time AS datetime)) AS newDate, WEEK(pickup_time) AS weekNum
-    FROM clean_runner_orders
+	SELECT
+		runner_id,
+		registration_date,
+		WEEK(registration_date) AS weekNum
+    FROM runners
 )
-SELECT COUNT(DISTINCT runner_id), weekNum 
+SELECT
+	weekNum,
+	COUNT(DISTINCT runner_id) AS "# of Runners Signed Up"
 FROM runners_weekly
 GROUP BY weekNum;
 
 -- 2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
 WITH runner_pickup AS (
-	SELECT o.order_id, r.runner_id, CAST(o.order_time AS datetime) AS newOrder, CAST(r.pickup_time AS datetime) AS newPickup
+	SELECT
+		o.order_id,
+		r.runner_id,
+		CAST(o.order_time AS datetime) AS castedOrder,
+		CAST(r.pickup_time AS datetime) AS castedPickup
 	FROM clean_runner_orders r
     JOIN clean_customer_orders o ON r.order_id = o.order_id
     GROUP BY o.order_time
 )
 -- SELECT order_id, runner_id, newOrder, newPickup, TIMEDIFF(newPickup, newOrder) -- run to check my work
-SELECT runner_id, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(newPickup, newOrder)))) AS AvgPickupMin
+SELECT
+	runner_id,
+	ROUND(AVG(TIME_TO_SEC(TIMEDIFF(castedPickup, castedOrder)))/60) AS AvgPickupMin
 FROM runner_pickup
 GROUP BY runner_id; -- comment out to check my work
 -- ORDER BY runner_id; -- comment out to check my work
 
 -- 3. Is there any relationship between the number of pizzas and how long the order takes to prepare?
 WITH pizza_prep AS (
-	SELECT o.order_id, COUNT(o.pizza_id) AS numPizzas, CAST(o.order_time AS datetime) AS newOrder, CAST(r.pickup_time AS datetime) AS newPickup
-	FROM clean_runner_orders r
+	SELECT
+		o.order_id,
+		COUNT(o.pizza_id) AS numPizzas,
+		CAST(o.order_time AS datetime) AS castedOrder,
+		CAST(r.pickup_time AS datetime) AS castedPickup,
+		SEC_TO_TIME(TIME_TO_SEC(TIMEDIFF(CAST(r.pickup_time AS datetime), CAST(o.order_time AS datetime)))) AS prepDuration,
+		minute(TIMEDIFF(CAST(r.pickup_time AS datetime), CAST(o.order_time AS datetime))) AS prepMinutes
+    FROM clean_runner_orders r
     JOIN clean_customer_orders o ON r.order_id = o.order_id
+    WHERE r.pickup_time IS NOT NULL
     GROUP BY o.order_time
 )
-SELECT numPizzas, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(newPickup, NewOrder)))) AS AvgPrepTime
+SELECT
+	numPizzas, (AVG(TIME_TO_SEC(prepDuration)))/60 AS AvgPrepMin_precise,
+	ROUND((AVG(TIME_TO_SEC(prepDuration)))/60) AS AvgPrepMin_rounded
 FROM pizza_prep
 GROUP BY numPizzas; -- it seems like the average prep time increases as number of pizzas increases
 
 -- 4. What was the average distance travelled for each customer?
 WITH customer_distance AS(
-	SELECT o.customer_id, o.order_id, r.distance_km
+	SELECT
+		o.customer_id,
+		o.order_id,
+        	r.distance_km
 	FROM clean_customer_orders o
 	JOIN clean_runner_orders r ON o.order_id = r.order_id
 	GROUP BY o.order_id
 	ORDER BY o.customer_id, o.order_id
 )
-SELECT customer_id, AVG(distance_km)
+SELECT
+	customer_id,
+	AVG(distance_km)
 FROM customer_distance
 GROUP BY customer_id;
 
 -- 5. What was the difference between the longest and shortest delivery times for all orders?
 WITH runner_pickup AS (
-	SELECT o.order_id, r.runner_id, CAST(o.order_time AS datetime) AS newOrder, CAST(r.pickup_time AS datetime) AS newPickup,
-		TIMEDIFF(CAST(r.pickup_time AS datetime),CAST(o.order_time AS datetime)) AS DiffTime
+	SELECT
+		o.order_id,
+		r.runner_id,
+		CAST(o.order_time AS datetime) AS castedOrder,
+        	CAST(r.pickup_time AS datetime) AS castedPickup,
+		TIMEDIFF(CAST(r.pickup_time AS datetime), CAST(o.order_time AS datetime)) AS DiffTime
 	FROM clean_runner_orders r
-    JOIN clean_customer_orders o ON r.order_id = o.order_id
-    GROUP BY o.order_time
+	JOIN clean_customer_orders o ON r.order_id = o.order_id
+	GROUP BY o.order_time
 )
 SELECT
 	MIN(DiffTime) AS "Shortest Delivery",
@@ -217,23 +249,35 @@ SELECT
 FROM runner_pickup;
 
 -- 6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
-SELECT order_id, runner_id, distance_km, duration_min,
--- 	distance_km*1000 AS distanceM,
+SELECT
+	order_id,
+	runner_id,
+	distance_km,
+	duration_min,
+-- 	distance_km*1000 AS distanceMeters,
  	duration_min/60 AS durationHour,
     (distance_km)/(duration_min/60) AS kmh
-FROM clean_runner_orders;
--- as duration decreased, with distance staying the same, kmh increased = time and speed are directly proportional
--- as duration stayed the same and distance increased, kmh increased = distance and speed are directly proportional
+FROM clean_runner_orders
+WHERE pickup_time IS NOT NULL
+ORDER BY runner_id ASC, kmh;
+/* kmh is the average speed for each runner for each delivery.
+As duration decreased, with distance staying the same, kmh increased -> time and speed are directly proportional
+As duration stayed the same and distance increased, kmh increased -> distance and speed are directly proportional */
 
 -- 7. What is the successful delivery percentage for each runner?
 With OrderCount AS (
-SELECT runner_id, COUNT(order_id) AS TotalOrders, SUM(
-	CASE
-		WHEN pickup_time IS NULL THEN 1
-        ELSE 0
-	END) AS NumOrdersNull
+SELECT
+	runner_id,
+	COUNT(order_id) AS TotalOrders,
+	SUM(
+		CASE
+			WHEN pickup_time IS NULL THEN 1
+			ELSE 0
+		END) AS NumOrdersNull
 FROM clean_runner_orders
 GROUP BY runner_id
 )
-SELECT runner_id, ((TotalOrders - NumOrdersNull)/TotalOrders)*100 AS "Percent of Successful Deliveries"
+SELECT
+	runner_id,
+	ROUND(((TotalOrders - NumOrdersNull)/TotalOrders)*100) AS "Percent of Successful Deliveries"
 FROM OrderCount;
