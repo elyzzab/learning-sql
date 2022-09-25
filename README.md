@@ -7,7 +7,7 @@ SQL Portfolio
 | ----------- | ----------- |----------- | ----------- |
 | Pizza Runner Database (DB) | Easy | create tables for database (db) | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/pizza-runner-table-queries.sql) |
 | Pizza Runner DB | Moderate | create clean temp tables for easier analysis | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/pizza-runner-table-cleaning-queries.sql) |
-| Pizza Runner DB | Moderate | query db to answer case study questions | paused |
+| Pizza Runner DB | Moderate | query db to answer case study questions | paused (Sections A & B [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/pizza-runner-analysis-queries-A-B.sql)) |
 | Danny's Diner DB | Easy | create tables for database | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/dannys-diner-table-queries.sql) |
 | Danny's Diner DB | Moderate | query db to answer case study questions | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/Danny%20Ma's%208-Week%20SQL%20Challenge/dannys-diner-analysis-queries.sql) |
 | Boba Shop Demo DB | Easy | create tables for db | SQL [script](https://github.com/elyzzab/learning-sql/blob/main/demo-database-boba-shop-tables.sql) |
