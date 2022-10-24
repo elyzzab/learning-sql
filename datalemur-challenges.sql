@@ -25,3 +25,14 @@ WITH filtered_jobs AS (
 )
 SELECT SUM(dup_job_count)
 FROM filtered_jobs;
+
+-- "Second Day Confirmation"
+/* I was to find users who signed up on TikTok via email and received a text confirmation but confirmed their account the day AFTER
+and not the day of their sign-up. I didn't use any hints this time. The only thing that gave me some difficulty was the SQL dialect's
+date functions, and I got the syntax correct thanks to a post on sqlines.
+*/
+SELECT e.user_id
+FROM texts t
+JOIN emails e ON t.email_id = e.email_id
+WHERE t.action_date = e.signup_date + INTERVAL '1 day'
+AND t.signup_action = 'Confirmed';
