@@ -36,3 +36,28 @@ FROM texts t
 JOIN emails e ON t.email_id = e.email_id
 WHERE t.action_date = e.signup_date + INTERVAL '1 day'
 AND t.signup_action = 'Confirmed';
+
+-- "Sales Team Compensation"
+/* From the SQL September challenges. I was to total compensation for employees using their total amount of deals, base salary, compensation rate,
+accelerator for compensation, and quota. This was the first Medium difficulty challenge I've attempted and it went well after using test cases and
+making changes where needed. I felt ready to try this challenge after being at my new, SQL-heavy job for a while. */
+-- SELECT * FROM employee_contract;
+WITH sums AS (
+  SELECT distinct emp.employee_id
+    , emp.base
+    , emp.commission
+    , emp.quota
+    , emp.accelerator
+    , SUM(d.deal_size) OVER (PARTITION BY d.employee_id) as deals_sum
+  FROM employee_contract emp
+  JOIN deals d
+    ON emp.employee_id = d.employee_id
+)
+SELECT employee_id, (base + (CASE
+  WHEN deals_sum - quota > 0
+  THEN (deals_sum-quota)*commission*accelerator + (quota*commission)
+  WHEN deals_sum - quota < 0
+  THEN deals_sum*commission
+  END)) AS total_compensation
+FROM sums
+ORDER BY total_compensation DESC, employee_id ASC
