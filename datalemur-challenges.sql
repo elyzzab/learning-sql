@@ -29,8 +29,7 @@ FROM filtered_jobs;
 -- "Second Day Confirmation"
 /* I was to find users who signed up on TikTok via email and received a text confirmation but confirmed their account the day AFTER
 and not the day of their sign-up. I didn't use any hints this time. The only thing that gave me some difficulty was the SQL dialect's
-date functions, and I got the syntax correct thanks to a post on sqlines.
-*/
+date functions, and I got the syntax correct thanks to a post on sqlines. */
 SELECT e.user_id
 FROM texts t
 JOIN emails e ON t.email_id = e.email_id
@@ -61,3 +60,40 @@ SELECT employee_id, (base + (CASE
   END)) AS total_compensation
 FROM sums
 ORDER BY total_compensation DESC, employee_id ASC
+
+-- "Booking Referral Source [Airbnb SQL Interview Question]"
+/* From the SQL September challenges, Medium difficulty. I was to find the top marketing channel, then the percentage of first rental bookings that used
+this marketing channel. This query took a while to write, and I even gave up a few times. Eventually, I viewed the solutions for guidance after giving
+it my best effort. Turns out I wasn't too far behind from the official solution, but the direction I was taking was a lot more complicated than it needed
+to be. Afterwards, I went through my own query and fixed it up, making sure I knew what each part did and why. */
+WITH all_data AS (
+SELECT ba.booking_id
+  , b.user_id -- not needed in solution
+  , CASE
+      WHEN channel IS NULL THEN 'unknown'
+      ELSE channel
+    END AS new_channel
+  , b.booking_date -- not needed in solution
+  , ROW_NUMBER() OVER (PARTITION BY b.user_id ORDER BY b.booking_date ASC)
+FROM booking_attribution ba
+JOIN bookings b ON b.booking_id = ba.booking_id
+)
+, first_book AS (
+  SELECT new_channel
+    , COUNT(*) as ct_bookings
+  FROM all_data
+  WHERE row_number = 1
+  GROUP BY new_channel
+)
+SELECT new_channel
+  , ROUND(
+    (100.0*(ct_bookings / 
+      (
+        SELECT SUM(ct_bookings)
+        FROM first_book
+      )
+    ))
+    , 0) as first_booking_pct
+FROM first_book
+ORDER BY ct_bookings DESC
+LIMIT 1;
